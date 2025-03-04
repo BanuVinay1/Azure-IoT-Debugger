@@ -10,7 +10,7 @@ CONNECTION_STRING = "HostName=iot-hub-banu.azure-devices.net;DeviceId=device1000
 
 
 if not CONNECTION_STRING:
-    raise ValueError("❌ ERROR: IOT_HUB_CONNECTION_STRING environment variable is not set!")
+    raise ValueError("ERROR: IOT_HUB_CONNECTION_STRING environment variable is not set!")
 
 # Function to generate telemetry data
 def generate_telemetry():
@@ -26,11 +26,11 @@ async def send_test_messages(client):
         for _ in range(10):  # Send 10 test messages
             telemetry_data = generate_telemetry()
             message = json.dumps(telemetry_data)
-            print(f"📤 Sending message: {message}")
+            print(f"Sending message: {message}")
             await client.send_message(message)
             await asyncio.sleep(2)  # Delay between messages
     except Exception as e:
-        print(f"❌ Error sending message: {e}")
+        print(f"Error sending message: {e}")
 
 # Function to receive messages from IoT Hub with a timeout
 async def receive_c2d_messages(client, timeout=5):
@@ -38,39 +38,39 @@ async def receive_c2d_messages(client, timeout=5):
         try:
             message = await asyncio.wait_for(client.receive_message(), timeout=timeout)
             command = message.data.decode()
-            print(f"📩 Received command from cloud: {command}")
+            print(f"Received command from cloud: {command}")
 
             # Process the command
             command_data = json.loads(command)
             if "command" in command_data:
                 execute_command(command_data["command"])
             else:
-                print("⚠️ Received unknown command format.")
+                print("Received unknown command format.")
 
         except asyncio.TimeoutError:
-            print("⌛ No Cloud-to-Device messages received, checking again...")
+            print("No Cloud-to-Device messages received, checking again...")
         except exceptions.ClientError as e:
-            print(f"❌ IoT Hub connection error: {e}")
+            print(f"IoT Hub connection error: {e}")
             await client.connect()  # Reconnect if needed
         except Exception as e:
-            print(f"❌ Error receiving message: {e}")
+            print(f"Error receiving message: {e}")
 
 # Function to execute received commands
 def execute_command(command):
-    print(f"✅ Executing command: {command}")
+    print(f"Executing command: {command}")
     if command == "turn_on_fan":
-        print("🌀 Fan is now ON!")
+        print("Fan is now ON!")
     elif command == "turn_off_fan":
-        print("🛑 Fan is now OFF!")
+        print("Fan is now OFF!")
     else:
-        print(f"⚠️ Unknown command: {command}")
+        print(f"Unknown command: {command}")
 
 # Main function to handle both sending and receiving messages
 async def main():
     client = IoTHubDeviceClient.create_from_connection_string(CONNECTION_STRING)
     await client.connect()
 
-    print("✅ Connected to IoT Hub. Listening for commands...")
+    print("Connected to IoT Hub. Listening for commands...")
 
     try:
         await asyncio.gather(
@@ -78,7 +78,7 @@ async def main():
             receive_c2d_messages(client)
         )
     except Exception as e:
-        print(f"❌ Connection lost. Restarting... {e}")
+        print(f"Connection lost. Restarting... {e}")
         await client.shutdown()
         await main()  # Restart the loop
 
