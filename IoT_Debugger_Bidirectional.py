@@ -6,7 +6,7 @@ from azure.iot.device.aio import IoTHubDeviceClient
 from azure.iot.device import exceptions
 
 # Azure IoT Hub connection string (replace with your actual connection string)
-CONNECTION_STRING = "HostName=iot-hub-banu.azure-devices.net;DeviceId=device10000181022;SharedAccessKey=iukK8q19IlDmI62vFIcYsDJkNyHZy5z3PPFX994LEc0="
+CONNECTION_STRING = "<Your Connection String>"
 
 
 if not CONNECTION_STRING:
